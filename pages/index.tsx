@@ -7,7 +7,7 @@ export default function Home() {
   const [batchNumber, setBatchNumber] = useState("");
   const [subDivNumber, setSubDivNumber] = useState("");
   const [refNumber, setRefNumber] = useState("");
-  const [isError, setIsError] = useState(false);
+  const [data, setData] = useState("");
 
   const Router = useRouter();
 
@@ -15,61 +15,83 @@ export default function Home() {
     if (batchNumber && subDivNumber && refNumber) {
       //  for print
       // `http://www.lesco.gov.pk/Modules/CustomerBill/BillInfo.asp?BatchNo=${batchNumber}&SubDiv=${subDivNumber}&RefNo=${refNumber}&RU=U&Exec=941N7&nCtID=8443142`
-     
-      const response = await axios.get(
-        'http://www.lesco.gov.pk/Modules/CustomerBill/BillInfo.asp',
-        {
-          params: {
-            nBatchNo: 13,
-            nSubDiv: 11218,
-            nRefNo: 2013101,
-            strRU: 'U',
-            btnViewBill: 'Proceed'
-          }
-        }
-      );
-      console.log(response.data);
+
       //  for view bill
+      setData(
+        `http://www.lesco.gov.pk/Modules/CustomerBill/BillInfo.asp?nBatchNo=${batchNumber}&nSubDiv=${subDivNumber}&nRefNo=${refNumber}&strRU=U&btnViewBill=Proceed`
+      );
       // Router.push(`http://www.lesco.gov.pk/Modules/CustomerBill/BillInfo.asp?nBatchNo=${batchNumber}&nSubDiv=${subDivNumber}&nRefNo=${refNumber}&strRU=U&btnViewBill=Proceed`);
     } else {
-      setIsError(true);
+      alert('Please fill all field!')
     }
   };
 
   return (
     <main>
-      {isError && <Alert severity="error">Please Fill All Field!</Alert>}
       <div>
-        <h1>Online Bill Checker</h1>
-        <TextField
-          label="BatchNO"
-          id="outlined-size-small"
-          size="small"
-          value={batchNumber}
-          onChange={(e) => setBatchNumber(e.target.value)}
-        />
-        <TextField
-          label="SubDiv"
-          id="outlined-size-small"
-          size="small"
-          value={subDivNumber}
-          onChange={(e) => setSubDivNumber(e.target.value)}
-        />
-        <TextField
-          label="RefNo"
-          id="outlined-size-small"
-          size="small"
-          value={refNumber}
-          onChange={(e) => setRefNumber(e.target.value)}
-        />
-        <Button
-          style={{ marginLeft: "5px" }}
-          variant="outlined"
-          onClick={() => handleBill()}
+        <div
+          style={{
+            paddingTop: "10px",
+            display: "flex",
+            alignItems: "center",
+            justifyContent: "center",
+          }}
         >
-          Check Bill
-        </Button>
+          <h1
+            style={{
+              textTransform: "uppercase",
+              fontSize: "16px",
+              fontWeight: "bold",
+            }}
+          >
+             Enter Reference Number
+          </h1>
+        </div>
+        <form
+          style={{
+            paddingTop: "15px",
+            display: "flex",
+            alignItems:'center',
+            flexDirection:'column'
+          }}
+        >
+          <div>
+            <TextField
+              label="BatchNO"
+              id="outlined-size-small"
+              size="small"
+              value={batchNumber}
+              onChange={(e) => setBatchNumber(e.target.value)}
+              style={{marginRight:'10px'}}
+              />
+            <TextField
+              label="SubDiv"
+              id="outlined-size-small"
+              size="small"
+              value={subDivNumber}
+              onChange={(e) => setSubDivNumber(e.target.value)}
+              style={{marginRight:'10px'}}
+            />
+            <TextField
+              label="RefNo"
+              id="outlined-size-small"
+              size="small"
+              value={refNumber}
+              onChange={(e) => setRefNumber(e.target.value)}
+            />
+          </div>
+          <div style={{paddingTop:'10px', marginBottom:'10px'}}>
+            <Button
+              style={{ marginLeft: "5px" }}
+              variant="outlined"
+              onClick={() => handleBill()}
+            >
+              View Bill
+            </Button>
+          </div>
+        </form>
       </div>
+      <div>{data && <iframe width="100%" height="515px" src={data} />}</div>
     </main>
   );
 }
